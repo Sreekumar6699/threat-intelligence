@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: threat-int
+  name: {{ include "threat-dashboard.fullname" . }}-app
+  labels:
+    app: {{ include "threat-dashboard.name" . }}-app
+spec:
+  type: {{ .Values.app.service.type }}
+  selector:
+    app: {{ include "threat-dashboard.name" . }}-app
+  ports:
+    - protocol: TCP
+      port: {{ .Values.app.service.port }}
+      targetPort: {{ .Values.app.service.targetPort }}
+      {{- if eq .Values.app.service.type "NodePort" }}
+      nodePort: {{ .Values.app.service.nodePort }}
+      {{- end }}

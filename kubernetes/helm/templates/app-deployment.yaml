@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: threat-int
+  name: {{ include "threat-dashboard.fullname" . }}-app
+  labels:
+    app: {{ include "threat-dashboard.name" . }}-app
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "threat-dashboard.name" . }}-app
+  template:
+    metadata:
+      labels:
+        app: {{ include "threat-dashboard.name" . }}-app
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}-app
+        image: "{{ .Values.app.image.repository }}:{{ .Values.app.image.tag }}"
+        imagePullPolicy: {{ .Values.app.image.pullPolicy }}
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          value: "postgresql+asyncpg://{{ .Values.postgres.auth.username }}:{{ .Values.postgres.auth.password }}@{{ include "threat-dashboard.fullname" . }}-postgres:5432/{{ .Values.postgres.auth.database }}"

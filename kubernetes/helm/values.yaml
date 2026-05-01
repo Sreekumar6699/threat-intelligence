@@ -1,0 +1,26 @@
+# Default values for threat-dashboard.
+
+app:
+  replicaCount: 1
+  image:
+    repository: threat-dashboard
+    pullPolicy: Always
+    tag: "latest"
+  service:
+    type: NodePort
+    port: 80
+    targetPort: 8000
+    nodePort: 30080
+
+
+postgres:
+  replicaCount: 1
+  image:
+    repository: postgres
+    tag: 15-alpine
+  auth:
+    username: postgres
+    password: "CHANGEME_IN_PROD"
+    database: threatdb
+  persistence:
+    size: 10Gi

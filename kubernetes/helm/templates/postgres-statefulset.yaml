@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: threat-int
+  name: {{ include "threat-dashboard.fullname" . }}-postgres
+  labels:
+    app: {{ include "threat-dashboard.name" . }}-postgres
+spec:
+  serviceName: {{ include "threat-dashboard.fullname" . }}-postgres
+  replicas: {{ .Values.postgres.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "threat-dashboard.name" . }}-postgres
+  template:
+    metadata:
+      labels:
+        app: {{ include "threat-dashboard.name" . }}-postgres
+    spec:
+      containers:
+      - name: postgres
+        image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          value: {{ .Values.postgres.auth.username | quote }}
+        - name: POSTGRES_PASSWORD
+          value: {{ .Values.postgres.auth.password | quote }}
+        - name: POSTGRES_DB
+          value: {{ .Values.postgres.auth.database | quote }}
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: {{ include "threat-dashboard.fullname" . }}-postgres-pvc

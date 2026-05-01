@@ -2,6 +2,8 @@
 
 A personal, self-hosted threat intelligence dashboard that monitors real-time vulnerability feeds and alerts you when vendors/products in your inventory are mentioned in CVEs, ransomware reports, or security advisories.
 
+![alt text](image.png)
+
 ## Features
 - 📡 Real-time threat feed monitoring (CISA, BleepingComputer, GitHub PoCs)
 - 📦 Upload a JSON inventory of vendors/products to track
